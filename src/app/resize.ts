@@ -1,6 +1,6 @@
 import type { Layers } from "./layers";
-
 import { Graphics, Container } from "pixi.js";
+import {computeTopPanelMetrics} from './topPanel.layout'
 
 export type LayoutMode = "desktop" | "mobile";
 
@@ -26,6 +26,11 @@ export type LayoutMetrics = {
   bottomPanelHeight: number;
 };
 
+type Viewport = {
+    width: number,
+    height:number
+}
+
 export const DESIGN_WIDTH = 1280;
 export const DESIGN_HEIGHT = 720;
 
@@ -36,59 +41,51 @@ export function getLayoutMode(
   return screenWidth < screenHeight ? "mobile" : "desktop";
 }
 
+function getViewportSize(): Viewport {
+  return {
+    width: document.documentElement.clientWidth,
+    height: document.documentElement.clientHeight,
+  };
+}
+
 export function computeLayout(
-  screenWidth: number,
-  screenHeight: number
 ): LayoutMetrics {
-  const mode = getLayoutMode(screenWidth, screenHeight);
+    let viewport: Viewport = getViewportSize()
+    const mode = getLayoutMode(viewport.width, viewport.height);
 
-  const scale = Math.min(
-    screenWidth / DESIGN_WIDTH,
-    screenHeight / DESIGN_HEIGHT
-  );
+  // Масштабируем сцену по ширине.
+  // Тогда верх и низ можно "приклеить",
+  // а центральную часть растягивать по высоте.
+  const scale = viewport.width / DESIGN_WIDTH;
 
-  const offsetX = (screenWidth - DESIGN_WIDTH * scale) / 2;
-  const offsetY = (screenHeight - DESIGN_HEIGHT * scale) / 2;
+  // Сколько дизайн-единиц помещается по высоте
+  // при текущем масштабе
+  const designHeight = viewport.height / scale;
 
-  if (mode === "desktop") {
-    const topPanelHeight = 80;
-    const bottomPanelHeight = 120;
-    const gameAreaHeight = DESIGN_HEIGHT - topPanelHeight - bottomPanelHeight;
+  const topPanelHeight = mode === "desktop" ? 150 : 150;
+  const bottomPanelHeight = mode === "desktop" ? 200 : 220;
 
-    return {
-      mode,
-      screenWidth,
-      screenHeight,
-      designWidth: DESIGN_WIDTH,
-      designHeight: DESIGN_HEIGHT,
-      scale,
-      offsetX,
-      offsetY,
-      topPanelY: 0,
-      gameLayerY: topPanelHeight,
-      bottomPanelY: topPanelHeight + gameAreaHeight,
-      topPanelHeight,
-      gameAreaHeight,
-      bottomPanelHeight,
-    };
-  }
-
-  const topPanelHeight = 110;
-  const bottomPanelHeight = 170;
-  const gameAreaHeight = DESIGN_HEIGHT - topPanelHeight - bottomPanelHeight;
+  const topPanelY = 0;
+  const bottomPanelY = designHeight - bottomPanelHeight;
+  const gameLayerY = topPanelHeight;
+  const gameAreaHeight = bottomPanelY - gameLayerY;
 
   return {
     mode,
-    screenWidth,
-    screenHeight,
+    screenWidth: viewport.width,
+    screenHeight: viewport.height,
+
     designWidth: DESIGN_WIDTH,
-    designHeight: DESIGN_HEIGHT,
+    designHeight,
+
     scale,
-    offsetX,
-    offsetY,
-    topPanelY: 0,
-    gameLayerY: topPanelHeight,
-    bottomPanelY: topPanelHeight + gameAreaHeight,
+    offsetX: 0,
+    offsetY: 0,
+
+    topPanelY,
+    gameLayerY,
+    bottomPanelY,
+
     topPanelHeight,
     gameAreaHeight,
     bottomPanelHeight,
@@ -96,39 +93,44 @@ export function computeLayout(
 }
 
 export function applyLayout(layers: Layers, layout: LayoutMetrics): void {
-  // Вписываем всю сцену в экран
   layers.root.scale.set(layout.scale);
-  layers.root.position.set(layout.offsetX, 0);
+  layers.root.position.set(layout.offsetX, layout.offsetY);
 
-  // Фон занимает всю дизайн-сцену
+  // Фон живёт во всей сцене
   layers.backgroundLayer.position.set(0, 0);
 
-  // Игровой слой начинается после верхней панели
+  // Игровая зона начинается сразу после верхней панели
   layers.gameLayer.position.set(0, layout.gameLayerY);
 
-  // UI живёт в координатах всей сцены
+  // UI располагается в координатах всей сцены
   layers.uiLayer.position.set(0, 0);
 
-  // Панели внутри UI
+  // Верх и низ "приклеены"
   layers.topPanelLayer.position.set(0, layout.topPanelY);
   layers.bottomPanelLayer.position.set(0, layout.bottomPanelY);
   layers.modalLayer.position.set(0, 0);
 
-  // Внутренние игровые слои обычно друг на друге
+  // Внутри gameLayer локальная система координат
   layers.reelsLayer.position.set(0, 0);
   layers.winlinesLayer.position.set(0, 0);
   layers.effectsLayer.position.set(0, 0);
 
-
-  // 👇 DEBUG
   drawLayoutDebug(layers, layout);
 }
 
-export function updateLayout(width: number, height:number,layers:Layers) {
-    const layout = computeLayout(width, height);
-    applyLayout(layers, layout);
-  }
+export function updateLayout(layers: Layers): LayoutMetrics {
+  const layout = computeLayout();
+  applyLayout(layers, layout);
+  return layout;
+}
 
+
+export function  handleResize(layers:Layers){
+    let layout = updateLayout(layers);
+    //compute new values for each block metrics (top,bootom)
+    computeTopPanelMetrics(layout);
+    
+}
 
 export function drawDebugRect(
   parent: Container,
@@ -151,11 +153,9 @@ export function drawDebugRect(
 
   return g;
 }
-
 let debugLayer: Container | null = null;
 
 function drawLayoutDebug(layers: Layers, layout: LayoutMetrics) {
-  // удаляем старый debug
   if (debugLayer) {
     debugLayer.destroy({ children: true });
   }
@@ -165,7 +165,7 @@ function drawLayoutDebug(layers: Layers, layout: LayoutMetrics) {
 
   layers.root.addChild(debugLayer);
 
-  // Вся сцена
+  // Вся доступная сцена
   drawDebugRect(
     debugLayer,
     0,
