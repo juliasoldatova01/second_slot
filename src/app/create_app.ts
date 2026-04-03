@@ -2,9 +2,9 @@
 import { createLayers } from "./layers";
 import "../style.css";
 import { Application} from "pixi.js";
-import { applyLayout, computeLayout, handleResize, updateLayout } from "./resize.ts";
-import { createTopPanelBox } from "../ui/top_panel.ts";
-import { computeTopPanelMetrics } from "./topPanel.layout.ts";
+import { handleResize, updateLayout } from "./resize.ts";
+import { createTopPanel, createTopPanelBox } from "../ui/top_panel/create_top_panel.ts";
+import { computeTopPanelMetrics } from "../ui/top_panel/topPanel.layout.ts";
 
 async function start() {
   const app = new Application;
@@ -15,10 +15,7 @@ async function start() {
     background: "#1a1a1a",
   });
   
-
-  document.body.appendChild(app.canvas);
-
-  
+  document.body.appendChild(app.canvas);  
 
   const layers = createLayers();
   app.stage.addChild(layers.root);
@@ -26,9 +23,10 @@ async function start() {
   let newLayout = updateLayout(layers);
 
   const topPanelMetrics = computeTopPanelMetrics(newLayout);
-  const box = createTopPanelBox(topPanelMetrics);
 
-  layers.topPanelLayer.addChild(box);
+  let topPanel = createTopPanel(layers, topPanelMetrics);
+
+  //layers.topPanelLayer.addChild(box);
   
   window.addEventListener("resize", ()=>{
       handleResize(layers);

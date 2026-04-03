@@ -1,6 +1,6 @@
 import type { Layers } from "./layers";
 import { Graphics, Container } from "pixi.js";
-import {computeTopPanelMetrics} from './topPanel.layout'
+import {computeTopPanelMetrics} from '../ui/top_panel/topPanel.layout'
 
 export type LayoutMode = "desktop" | "mobile";
 
@@ -129,7 +129,7 @@ export function  handleResize(layers:Layers){
     let layout = updateLayout(layers);
     //compute new values for each block metrics (top,bootom)
     computeTopPanelMetrics(layout);
-    
+
 }
 
 export function drawDebugRect(
