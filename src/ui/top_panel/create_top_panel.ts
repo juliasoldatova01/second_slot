@@ -1,8 +1,12 @@
-import { Container, Graphics, Text} from "pixi.js";
+import { Container, Graphics, Text, Assets, Texture, Sprite} from "pixi.js";
 import type { TopPanelMetrics } from "./topPanel.layout";
-import type { Button } from "@pixi/ui";
+import { Button, FancyButton } from "@pixi/ui";
 import { type Layers } from "../../app/layers";
 import {basicHUDStyle} from "../font_settings";
+import { initSlotAtlasAssets } from "../../assets/slot_atlas_assets";
+
+
+const atlas = await initSlotAtlasAssets();
 
 export type TopPanel = {
   container: Container
@@ -10,7 +14,7 @@ export type TopPanel = {
   balance: Text
   bet: Text
   win: Text
-  soundBtn: Button | null
+  soundBtn: FancyButton
 }
 
 export function createTopPanel(layers: Layers, metrics: TopPanelMetrics):TopPanel{
@@ -64,27 +68,52 @@ export function createTopPanel(layers: Layers, metrics: TopPanelMetrics):TopPane
   bet.style.fontSize = fontSize;
   win.style.fontSize = fontSize;
 
-  container.addChild(background,balance,win,bet);
+  //Sound BTN
+  const soundBtn = createSoundButton();
+  soundBtn.scale.set(metrics.scale);
+  soundBtn.anchor.set(0.5);
+  soundBtn.position.set(metrics.width - (soundBtn.width + metrics.paddingX), metrics.height/2);
 
+  container.addChild(background,balance,win,bet,soundBtn);
+  
   return {
       container,
       background,
       balance,
       bet,
       win,
-      soundBtn: null
+      soundBtn
   };
 }
 
-export function createTopPanelBox(metrics: TopPanelMetrics) {
-  const box = new Graphics()
-    .rect(0, 0, metrics.itemSize, metrics.itemSize)
-    .fill(0xff0000);
+function createSoundButton() {
+  const soundTexture = atlas.buttons.sound;
 
-  const x = metrics.paddingX;
-  const y = (metrics.height - metrics.itemSize) / 2;
+  const sprite = new Sprite(soundTexture);
+  sprite.anchor.set(0.5);
 
-  box.position.set(x, y);
+  const button = new FancyButton({
+    defaultView: sprite,
 
-  return box;
+    animations: {
+      hover: {
+        props: {
+          scale: { x: 1.1, y: 1.1 }
+        },
+        duration: 100,
+      },
+      pressed: {
+        props: {
+          scale: { x: 0.9, y: 0.9 }
+        },
+        duration: 100,
+      }
+    }
+  });
+
+  button.onPress.connect(() => {
+    console.log('Button pressed!');
+  });
+
+  return button;
 }

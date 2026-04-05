@@ -4,8 +4,9 @@ export type TopPanelMetrics = {
   width: number;
   height: number;
   paddingX: number;
-  itemSize: number;      // вертикический центр для панели высотой ~54
-  gap: number;        // между Balance и Bet
+  itemSize: number;     
+  gap: number; 
+  scale: number;       
 };
 
 
@@ -18,7 +19,8 @@ export function computeTopPanelMetrics(layout: LayoutMetrics): TopPanelMetrics {
     height,
     paddingX: 24,
     itemSize: height * 0.6,
-    gap: 100,         // между Balance и Bet
+    gap: 100, 
+    scale: layout.scale        
   };
 }
 

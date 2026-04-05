@@ -3,7 +3,7 @@ import { createLayers } from "./layers";
 import "../style.css";
 import { Application} from "pixi.js";
 import { handleResize, updateLayout } from "./resize.ts";
-import { createTopPanel, createTopPanelBox } from "../ui/top_panel/create_top_panel.ts";
+import { createTopPanel} from "../ui/top_panel/create_top_panel.ts";
 import { computeTopPanelMetrics } from "../ui/top_panel/topPanel.layout.ts";
 
 async function start() {
