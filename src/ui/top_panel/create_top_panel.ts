@@ -1,31 +1,30 @@
-import { Container, Graphics, Text, Assets, Texture, Sprite} from "pixi.js";
-import type { TopPanelMetrics } from "./topPanel.layout";
-import { Button, FancyButton } from "@pixi/ui";
+import { Container, Graphics, Text, Sprite, Rectangle} from "pixi.js";
+import type { TopPanelConfigs } from "./topPanel.layout";
+import {FancyButton } from "@pixi/ui";
 import { type Layers } from "../../app/layers";
 import {basicHUDStyle} from "../font_settings";
-import { initSlotAtlasAssets } from "../../assets/slot_atlas_assets";
+import { atlas } from "../../app/create_app";
 
-
-const atlas = await initSlotAtlasAssets();
 
 export type TopPanel = {
-  container: Container
-  background: Graphics
+  container: Container,
+  textBlock:Container,
+  background: Graphics,
   balance: Text
   bet: Text
   win: Text
-  soundBtn: FancyButton
+  soundBtn: FancyButton,
+  configs: TopPanelConfigs;
 }
 
-export function createTopPanel(layers: Layers, metrics: TopPanelMetrics):TopPanel{
+export function createTopPanel(layers: Layers, configs: TopPanelConfigs):TopPanel{
+  console.log(configs);
   const container = layers.topPanelLayer;
 
   const background = new Graphics();
 
-  let width = metrics.width
-  let height = metrics.height
-
-  let fontSize = metrics.height * 0.2;
+  let width = configs.width
+  let height = configs.height
 
   // основной фон
   background.roundRect(0, 0, width, height, 0);
@@ -52,49 +51,61 @@ export function createTopPanel(layers: Layers, metrics: TopPanelMetrics):TopPane
   style: basicHUDStyle
   });
 
-
-  balance.x = metrics.paddingX;
-  balance.y = metrics.height / 2;
-  bet.x = balance.x + balance.width + metrics.gap * 2;
-  bet.y = metrics.height / 2;
-  win.x = bet.x + bet.width + metrics.gap * 2;
-  win.y = metrics.height / 2;
-
-  balance.anchor.set(0, 0.5);
-  bet.anchor.set(0, 0.5);
-  win.anchor.set(0, 0.5);
-
-  balance.style.fontSize = fontSize;
-  bet.style.fontSize = fontSize;
-  win.style.fontSize = fontSize;
-
+  let textBlock = new Container();
+  textBlock.addChild(balance,bet,win);
   //Sound BTN
   const soundBtn = createSoundButton();
-  soundBtn.scale.set(metrics.scale);
-  soundBtn.anchor.set(0.5);
-  soundBtn.position.set(metrics.width - (soundBtn.width + metrics.paddingX), metrics.height/2);
+ 
 
-  container.addChild(background,balance,win,bet,soundBtn);
+  container.addChild(background,textBlock,soundBtn);
   
-  return {
-      container,
+  const panel: TopPanel = {
+    container,
       background,
+      textBlock,
       balance,
       bet,
       win,
-      soundBtn
-  };
+      soundBtn,
+      configs
+  }
+
+  updateTopPanel(panel,configs)
+  return panel;
+}
+
+export function updateTopPanel(panel: TopPanel, configs: TopPanelConfigs){
+
+  panel.textBlock.x = configs.paddingX;
+  panel.textBlock.y = configs.height / 2;
+  let texts = panel.textBlock.children as Text[]
+  texts.forEach((t=>{
+    t.style.fontSize = configs.fontSize;
+    t.anchor.set(0, 0.5);
+  }));
+ 
+  panel.balance.x = 0;
+  
+  panel.bet.x = panel.balance.x + panel.balance.width + configs.gap; 
+  
+  panel.win.x = panel.bet.x + panel.bet.width + configs.gap;
+
+  panel.soundBtn.anchor.set(0.5);
+  panel.soundBtn.position.set(configs.width - (panel.soundBtn.width + configs.paddingX), configs.height/2);
+  
 }
 
 function createSoundButton() {
-  const soundTexture = atlas.buttons.sound;
+  const soundTexture = atlas.buttons.sound.default;
+  const soundMutedTexture = atlas.buttons.sound.disabled;
 
-  const sprite = new Sprite(soundTexture);
-  sprite.anchor.set(0.5);
+  const icon = new Sprite(soundTexture);
+  icon.anchor.set(0.5);
+
+  let isOn = true;
 
   const button = new FancyButton({
-    defaultView: sprite,
-
+    defaultView: icon,  
     animations: {
       hover: {
         props: {
@@ -111,9 +122,18 @@ function createSoundButton() {
     }
   });
 
+  button.width = 100;
+  button.height = 100;
+
   button.onPress.connect(() => {
-    console.log('Button pressed!');
+    isOn = !isOn;
+    icon.texture = isOn ? soundTexture : soundMutedTexture;
   });
+  
+  button.hitArea = new Rectangle(
+    0,0,button.width, button.height
+  );
 
   return button;
 }
+

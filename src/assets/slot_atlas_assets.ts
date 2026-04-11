@@ -77,7 +77,10 @@ export async function initSlotAtlasAssets() {
     "symbol_coin_star",
     "symbol_bar",
     "button_spin",
+    "button_spin_pressed",
+    "button_spin_disabled",
     "button_sound",
+    "button_sound_muted"
   ]);
 
   return {
@@ -93,8 +96,15 @@ export async function initSlotAtlasAssets() {
       bar: textures.symbol_bar,
     },
     buttons: {
-      spin: textures.button_spin,
-      sound: textures.button_sound,
+      spin: {
+        default:textures.button_spin,
+        disabled: textures.button_spin_disabled,
+        pressed:textures.button_spin_pressed,
+      },
+      sound: {
+        default:textures.button_sound,
+        disabled: textures.button_sound_muted
+      }
     },
     raw: textures,
   };

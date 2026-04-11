@@ -1,10 +1,13 @@
 import type { Layers } from "./layers";
 import { Graphics, Container } from "pixi.js";
-import {computeTopPanelMetrics} from '../ui/top_panel/topPanel.layout'
+import {computeTopPanelConfigs} from '../ui/top_panel/topPanel.layout'
+import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel.layouts";
+import { updateBottomPanel, type BottomPanel } from "../ui/bottom_panel/create_bottom_panel";
+import { type TopPanel, updateTopPanel } from "../ui/top_panel/create_top_panel";
 
 export type LayoutMode = "desktop" | "mobile";
 
-export type LayoutMetrics = {
+export type LayoutConfigs = {
   mode: LayoutMode;
 
   screenWidth: number;
@@ -49,7 +52,7 @@ function getViewportSize(): Viewport {
 }
 
 export function computeLayout(
-): LayoutMetrics {
+): LayoutConfigs {
     let viewport: Viewport = getViewportSize()
     const mode = getLayoutMode(viewport.width, viewport.height);
 
@@ -63,7 +66,7 @@ export function computeLayout(
   const designHeight = viewport.height / scale;
 
   const topPanelHeight = mode === "desktop" ? 150 : 150;
-  const bottomPanelHeight = mode === "desktop" ? 200 : 220;
+  const bottomPanelHeight = mode === "desktop" ? 250 : 150;
 
   const topPanelY = 0;
   const bottomPanelY = designHeight - bottomPanelHeight;
@@ -92,7 +95,7 @@ export function computeLayout(
   };
 }
 
-export function applyLayout(layers: Layers, layout: LayoutMetrics): void {
+export function applyLayout(layers: Layers, layout: LayoutConfigs): void {
   layers.root.scale.set(layout.scale);
   layers.root.position.set(layout.offsetX, layout.offsetY);
 
@@ -118,18 +121,25 @@ export function applyLayout(layers: Layers, layout: LayoutMetrics): void {
   drawLayoutDebug(layers, layout);
 }
 
-export function updateLayout(layers: Layers): LayoutMetrics {
+export function updateLayout(layers: Layers): LayoutConfigs {
   const layout = computeLayout();
   applyLayout(layers, layout);
   return layout;
 }
 
 
-export function  handleResize(layers:Layers){
-    let layout = updateLayout(layers);
-    //compute new values for each block metrics (top,bootom)
-    computeTopPanelMetrics(layout);
+export function handleResize(
+  layers: Layers,
+  topPanel: TopPanel,
+  bottomPanel: BottomPanel
+) {
+  const layout = updateLayout(layers);
 
+  const topPanelConfigs = computeTopPanelConfigs(layout);
+  updateTopPanel(topPanel, topPanelConfigs);
+
+  const bottomPanelConfigs = computeBottomPanelConfigs(layout);
+  updateBottomPanel(bottomPanel, bottomPanelConfigs);
 }
 
 export function drawDebugRect(
@@ -155,7 +165,7 @@ export function drawDebugRect(
 }
 let debugLayer: Container | null = null;
 
-function drawLayoutDebug(layers: Layers, layout: LayoutMetrics) {
+function drawLayoutDebug(layers: Layers, layout: LayoutConfigs) {
   if (debugLayer) {
     debugLayer.destroy({ children: true });
   }
@@ -177,14 +187,14 @@ function drawLayoutDebug(layers: Layers, layout: LayoutMetrics) {
   );
 
   // Top panel
-  drawDebugRect(
+  /* drawDebugRect(
     debugLayer,
     0,
     layout.topPanelY,
     layout.designWidth,
     layout.topPanelHeight,
     0x00ff00
-  );
+  ); */
 
   // Game area
   drawDebugRect(
@@ -197,12 +207,12 @@ function drawLayoutDebug(layers: Layers, layout: LayoutMetrics) {
   );
 
   // Bottom panel
-  drawDebugRect(
+ /*  drawDebugRect(
     debugLayer,
     0,
     layout.bottomPanelY,
     layout.designWidth,
     layout.bottomPanelHeight,
     0xff0000
-  );
+  ); */
 }
