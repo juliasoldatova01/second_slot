@@ -4,10 +4,13 @@ import "../style.css";
 import { Application} from "pixi.js";
 import { handleResize, updateLayout } from "./resize.ts";
 import { createTopPanel} from "../ui/top_panel/create_top_panel.ts";
-import { computeTopPanelConfigs } from "../ui/top_panel/topPanel.layout.ts";
+import { computeTopPanelConfigs } from "../ui/top_panel/top_panel_configs.ts";
 import { createBottomPanel } from "../ui/bottom_panel/create_bottom_panel.ts";
-import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel.layouts.ts";
+import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel_configs.ts";
 import { initSlotAtlasAssets } from "../assets/slot_atlas_assets.ts";
+import { createReelsContainerView } from "../ui/game_area/reels_view.ts";
+import { computeGameLayerConfigs } from "../ui/game_area/game_area_configs.ts";
+import { createGameArea } from "../ui/game_area/game_layer.ts";
 
 export const atlas = await initSlotAtlasAssets();
 
@@ -33,8 +36,12 @@ async function start() {
   const bottomPanelConfigs = computeBottomPanelConfigs(layout);
   const bottomPanel = createBottomPanel(layers, bottomPanelConfigs);
 
+  const gameLayerConfigs = computeGameLayerConfigs(layout);
+
+  const gameArea = createGameArea(layers,gameLayerConfigs);
+
   window.addEventListener("resize", () => {
-    handleResize(layers, topPanel, bottomPanel);
+    handleResize(layers, topPanel, bottomPanel,gameArea);
   });
 }
 

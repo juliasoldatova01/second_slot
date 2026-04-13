@@ -1,5 +1,5 @@
 import { Container, Graphics, Text, Sprite, Rectangle} from "pixi.js";
-import type { TopPanelConfigs } from "./topPanel.layout";
+import type { TopPanelConfigs } from "./top_panel_configs";
 import {FancyButton } from "@pixi/ui";
 import { type Layers } from "../../app/layers";
 import {basicHUDStyle} from "../font_settings";

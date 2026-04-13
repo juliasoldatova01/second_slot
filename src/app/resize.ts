@@ -1,9 +1,11 @@
 import type { Layers } from "./layers";
 import { Graphics, Container } from "pixi.js";
-import {computeTopPanelConfigs} from '../ui/top_panel/topPanel.layout'
-import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel.layouts";
+import {computeTopPanelConfigs} from '../ui/top_panel/top_panel_configs'
+import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel_configs";
 import { updateBottomPanel, type BottomPanel } from "../ui/bottom_panel/create_bottom_panel";
 import { type TopPanel, updateTopPanel } from "../ui/top_panel/create_top_panel";
+import { computeGameLayerConfigs } from "../ui/game_area/game_area_configs";
+import { updateGameArea, type GameArea } from "../ui/game_area/game_layer";
 
 export type LayoutMode = "desktop" | "mobile";
 
@@ -118,7 +120,7 @@ export function applyLayout(layers: Layers, layout: LayoutConfigs): void {
   layers.winlinesLayer.position.set(0, 0);
   layers.effectsLayer.position.set(0, 0);
 
-  drawLayoutDebug(layers, layout);
+  //drawLayoutDebug(layers, layout);
 }
 
 export function updateLayout(layers: Layers): LayoutConfigs {
@@ -131,7 +133,8 @@ export function updateLayout(layers: Layers): LayoutConfigs {
 export function handleResize(
   layers: Layers,
   topPanel: TopPanel,
-  bottomPanel: BottomPanel
+  bottomPanel: BottomPanel,
+  gameArea: GameArea
 ) {
   const layout = updateLayout(layers);
 
@@ -140,6 +143,9 @@ export function handleResize(
 
   const bottomPanelConfigs = computeBottomPanelConfigs(layout);
   updateBottomPanel(bottomPanel, bottomPanelConfigs);
+
+  const gameLayerConfigs = computeGameLayerConfigs(layout);
+  updateGameArea(gameArea, gameLayerConfigs);
 }
 
 export function drawDebugRect(

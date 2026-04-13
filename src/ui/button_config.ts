@@ -1,4 +1,4 @@
-import type { BottomPanelConfigs } from "./bottom_panel/bottom_panel.layouts";
+import type { BottomPanelConfigs } from "./bottom_panel/bottom_panel_configs";
 
 export type ButtonState = "active" | "disabled";
 

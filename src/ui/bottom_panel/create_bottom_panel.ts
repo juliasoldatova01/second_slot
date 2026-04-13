@@ -2,7 +2,7 @@ import { Container, Graphics, Assets,} from "pixi.js";
 import { type Layers } from "../../app/layers";
 
 import {TextButton} from "../text_button"
-import type { BottomPanelConfigs } from "./bottom_panel.layouts";
+import type { BottomPanelConfigs } from "./bottom_panel_configs";
 import { createStretcingBg } from "../ui_helpers";
 import { computeSpinButtonConfig, defaultTextButtonConfig} from "../button_config";
 import { createSpinBtn, type SwitchButton } from "./spin_btn";
