@@ -3,8 +3,7 @@ import type { TopPanelConfigs } from "./top_panel_configs";
 import {FancyButton } from "@pixi/ui";
 import { type Layers } from "../../app/layers";
 import {basicHUDStyle} from "../font_settings";
-import { atlas } from "../../app/create_app";
-
+import { getSlotAssets } from "../../assets/slot_assets";
 
 export type TopPanel = {
   container: Container,
@@ -18,7 +17,7 @@ export type TopPanel = {
 }
 
 export function createTopPanel(layers: Layers, configs: TopPanelConfigs):TopPanel{
-  console.log(configs);
+ 
   const container = layers.topPanelLayer;
 
   const background = new Graphics();
@@ -37,7 +36,7 @@ export function createTopPanel(layers: Layers, configs: TopPanelConfigs):TopPane
   background.rect(0, height, width, 1).fill({ color: 0x11161f, alpha: 0.7 });
 
   let balance = new Text({
-  text: "Balance: 1000",
+  text: "Balance: $1000",
   style: basicHUDStyle
   });
 
@@ -96,6 +95,7 @@ export function updateTopPanel(panel: TopPanel, configs: TopPanelConfigs){
 }
 
 function createSoundButton() {
+  const atlas = getSlotAssets();
   const soundTexture = atlas.buttons.sound.default;
   const soundMutedTexture = atlas.buttons.sound.disabled;
 

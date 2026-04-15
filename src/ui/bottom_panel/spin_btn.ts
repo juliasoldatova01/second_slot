@@ -1,7 +1,10 @@
 import {  Sprite,} from "pixi.js";
 import { type ButtonState, type SpinButtonConfig, } from "../button_config";
 import { FancyButton } from "@pixi/ui";
-import { atlas } from "../../app/create_app";
+import { getSlotAssets } from "../../assets/slot_assets";
+
+
+
 
 export type SwitchButton = {
     container: FancyButton,
@@ -12,6 +15,7 @@ export type SwitchButton = {
 
 
 export function createSpinBtn(configs:SpinButtonConfig): SwitchButton{
+  const atlas = getSlotAssets();
     const icon = new Sprite(atlas.buttons.spin.default);
     icon.anchor.set(0.5);
 

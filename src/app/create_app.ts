@@ -7,13 +7,14 @@ import { createTopPanel} from "../ui/top_panel/create_top_panel.ts";
 import { computeTopPanelConfigs } from "../ui/top_panel/top_panel_configs.ts";
 import { createBottomPanel } from "../ui/bottom_panel/create_bottom_panel.ts";
 import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel_configs.ts";
-import { initSlotAtlasAssets } from "../assets/slot_atlas_assets.ts";
-import { createReelsContainerView } from "../ui/game_area/reels_view.ts";
 import { computeGameLayerConfigs } from "../ui/game_area/game_area_configs.ts";
 import { createGameArea } from "../ui/game_area/game_layer.ts";
+import { loadSlotAssets } from "../assets/slot_assets.ts";
 
-export const atlas = await initSlotAtlasAssets();
 
+
+
+await loadSlotAssets();
 async function start() {
   const app = new Application();
   (globalThis as any).__PIXI_APP__ = app;
