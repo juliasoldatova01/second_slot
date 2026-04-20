@@ -7,7 +7,7 @@ export type SwitchButton = {
   container: FancyButton;
   state: ButtonState;
   setState: (state: ButtonState) => void;
-  onClick?: () => void;
+  onClick: (cb: () => void) => void;
 };
 
 export function createSpinBtn(configs: SpinButtonConfig): SwitchButton {
@@ -45,11 +45,20 @@ export function createSpinBtn(configs: SpinButtonConfig): SwitchButton {
   console.log(button.width);
   button.height = configs.height;
 
+  const clickCallbacks: (() => void)[] = [];
+
+  button.onPress.connect(() => {
+    clickCallbacks.forEach((cb) => cb());
+  });
+
   const spinBtn: SwitchButton = {
     container: button,
     state: "active",
     setState: (newState: ButtonState) => {
       spinBtn.state = newState;
+    },
+    onClick: (cb: () => void) => {
+      clickCallbacks.push(cb);
     },
   };
 

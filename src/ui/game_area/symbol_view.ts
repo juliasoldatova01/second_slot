@@ -1,4 +1,4 @@
-import { Container, Assets, Sprite } from "pixi.js";
+import { Container, Sprite } from "pixi.js";
 import type { GameLayerConfigs } from "./game_area_configs";
 import { getSlotAssets } from "../../assets/slot_assets";
 

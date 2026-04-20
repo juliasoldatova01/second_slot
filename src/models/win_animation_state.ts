@@ -11,5 +11,5 @@ export class WinAnimation {
     this.isSkipped = false;
   }
 
-  start(winLines: [], resultGrid: []) {}
+  start(_winLines: [], _resultGrid: []) {}
 }

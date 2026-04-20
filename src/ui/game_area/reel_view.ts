@@ -1,4 +1,4 @@
-import { Container, type Graphics } from "pixi.js";
+import { Container } from "pixi.js";
 import type { GameLayerConfigs } from "./game_area_configs";
 import {
   type SymbolType,
@@ -69,9 +69,9 @@ function getReelX(reel: ReelView, configs: GameLayerConfigs): number {
   return startX + reel.index * (reelWidth + gap);
 }
 
-function getReelY(configs: GameLayerConfigs): number {
-  return (configs.height - configs.reel.reelH) / 2;
-}
+// function getReelY(configs: GameLayerConfigs): number {
+//   return (configs.height - configs.reel.reelH) / 2;
+// }
 
 const SYMBOL_VALUES = Object.values(SYMBOLS);
 
