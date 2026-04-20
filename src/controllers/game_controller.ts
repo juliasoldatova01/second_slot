@@ -13,10 +13,10 @@ export function initializeGame(topTanel: TopPanel, gameArea: GameArea, bottomPan
     renderPanel(topTanel,playerState);
     const round = new RoundState();
     const reelsState = new ReelsState();
-    const reel1 = new ReelState(1);
-    const reel2 = new ReelState(2);
-    const reel3 = new ReelState(3);
+    const reel1 = new ReelState(0);
+    const reel2 = new ReelState(1);
+    const reel3 = new ReelState(2);
     reelsState.reels.push(reel1,reel2,reel3);
     round.start();
-    startSpinAll(gameArea.reels, reelsState,dt);
+    startSpinAll(reelsState, gameArea.reels,dt);
 }
