@@ -1,16 +1,13 @@
-import { Application,Ticker} from "pixi.js";
+import { Application, Ticker } from "pixi.js";
 
-export function runApp(app: Application){
+export function runApp(app: Application) {
+  function update(dt: number) {}
 
-    function update(dt: number) {
-        
-    }
-
-    const tickerFn = (t: Ticker) => {
-        let dt = t.deltaMS / 1000;
-        dt = Math.min(dt, 0.05);
-        update(dt);
-    };
+  const tickerFn = (t: Ticker) => {
+    let dt = t.deltaMS / 1000;
+    dt = Math.min(dt, 0.05);
+    update(dt);
+  };
 
   app.ticker.add(tickerFn);
 
@@ -18,4 +15,5 @@ export function runApp(app: Application){
     // app.canvas.removeEventListener("pointerdown", onPointerDown);
     app.ticker.remove(tickerFn);
     app.stage.removeChildren();
-  };}
+  };
+}

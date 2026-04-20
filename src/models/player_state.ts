@@ -1,46 +1,45 @@
-
 export class PlayerState {
-    private balance:number;
-    private bet:number;
-    private win:number;
-    private lastWin:number;
+  private balance: number;
+  private bet: number;
+  private win: number;
+  private lastWin: number;
 
-    constructor(balance:number, bet:number, win:number){
-        this.balance = balance;
-        this.bet = bet;
-        this.win = win;
-        this.lastWin = 0;
-    }
-    
-    get getBalance(): number {
-        return this.balance
-    }
+  constructor(balance: number, bet: number, win: number) {
+    this.balance = balance;
+    this.bet = bet;
+    this.win = win;
+    this.lastWin = 0;
+  }
 
-    set setBalance(newBalance:number){
-        this.balance = newBalance;
-    }
+  get getBalance(): number {
+    return this.balance;
+  }
 
-    get getBet(): number {
-        return this.bet
-    }
+  set setBalance(newBalance: number) {
+    this.balance = newBalance;
+  }
 
-    set setBet(newBet:number){
-        this.balance = newBet;
-    }
+  get getBet(): number {
+    return this.bet;
+  }
 
-    get getWin(): number {
-        return this.win
-    }
+  set setBet(newBet: number) {
+    this.balance = newBet;
+  }
 
-    set setWin(newWin:number){
-        this.win = newWin;
-    }
-    
-    get getLastWin(): number {
-        return this.lastWin
-    }
+  get getWin(): number {
+    return this.win;
+  }
 
-    set setLastWin(newWin:number){
-        this.lastWin = newWin;
-    }
+  set setWin(newWin: number) {
+    this.win = newWin;
+  }
+
+  get getLastWin(): number {
+    return this.lastWin;
+  }
+
+  set setLastWin(newWin: number) {
+    this.lastWin = newWin;
+  }
 }

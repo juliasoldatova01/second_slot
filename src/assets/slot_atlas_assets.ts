@@ -13,7 +13,7 @@ import { Assets, Texture } from "pixi.js";
 
 export async function loadAtlasTextureRecord(
   atlasPath: string,
-  requiredKeys: string[] = []
+  requiredKeys: string[] = [],
 ): Promise<Record<string, Texture>> {
   const sheet = await Assets.load(atlasPath);
 
@@ -30,7 +30,7 @@ export async function loadAtlasTextureRecord(
       [
         `Atlas textures not found: ${missingKeys.join(", ")}`,
         `Available keys: ${Object.keys(textures).join(", ")}`,
-      ].join("\n")
+      ].join("\n"),
     );
   }
 
@@ -80,7 +80,7 @@ export async function initSlotAtlasAssets() {
     "button_spin_pressed",
     "button_spin_disabled",
     "button_sound",
-    "button_sound_muted"
+    "button_sound_muted",
   ]);
 
   return {
@@ -97,14 +97,14 @@ export async function initSlotAtlasAssets() {
     },
     buttons: {
       spin: {
-        default:textures.button_spin,
+        default: textures.button_spin,
         disabled: textures.button_spin_disabled,
-        pressed:textures.button_spin_pressed,
+        pressed: textures.button_spin_pressed,
       },
       sound: {
-        default:textures.button_sound,
-        disabled: textures.button_sound_muted
-      }
+        default: textures.button_sound,
+        disabled: textures.button_sound_muted,
+      },
     },
     raw: textures,
   };

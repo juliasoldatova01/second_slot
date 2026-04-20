@@ -1,23 +1,22 @@
 import { Application, Container } from "pixi.js";
 
-
 export type Layers = {
-  root: Container,
+  root: Container;
 
-  backgroundLayer: Container,
+  backgroundLayer: Container;
 
-  gameLayer: Container,
-  effectsLayer:Container,
-  reelsLayer:Container,
-  winlinesLayer:Container,
+  gameLayer: Container;
+  effectsLayer: Container;
+  reelsLayer: Container;
+  winlinesLayer: Container;
 
-  uiLayer:Container,
-  topPanelLayer:Container
-  bottomPanelLayer:Container,
-  modalLayer:Container,
-}
+  uiLayer: Container;
+  topPanelLayer: Container;
+  bottomPanelLayer: Container;
+  modalLayer: Container;
+};
 
-export function createLayers():Layers{
+export function createLayers(): Layers {
   const root = new Container();
   root.label = "Root";
 
@@ -27,7 +26,6 @@ export function createLayers():Layers{
   gameLayer.label = "Game Layer";
   const uiLayer = new Container();
   uiLayer.label = "UI Layer";
-
 
   const reelsLayer = new Container();
   reelsLayer.label = "Reels Layer";
@@ -43,25 +41,24 @@ export function createLayers():Layers{
   const modalLayer = new Container();
   modalLayer.label = "Modal Layer";
 
+  root.addChild(backgroundLayer, gameLayer, uiLayer);
 
-  root.addChild(backgroundLayer,gameLayer,uiLayer);
+  gameLayer.addChild(reelsLayer, winlinesLayer, effectsLayer);
 
-  gameLayer.addChild(reelsLayer,winlinesLayer,effectsLayer);
+  uiLayer.addChild(topPanelLayer, bottomPanelLayer, modalLayer);
 
-  uiLayer.addChild(topPanelLayer,bottomPanelLayer,modalLayer);
-
-  const layers:Layers = {
-  root: root,
-  backgroundLayer: backgroundLayer,
-  gameLayer: gameLayer,
-  effectsLayer:effectsLayer,
-  reelsLayer:reelsLayer,
-  winlinesLayer:winlinesLayer,
-  uiLayer:uiLayer,
-  topPanelLayer:topPanelLayer,
-  bottomPanelLayer:bottomPanelLayer,
-  modalLayer:modalLayer,
-  }
+  const layers: Layers = {
+    root: root,
+    backgroundLayer: backgroundLayer,
+    gameLayer: gameLayer,
+    effectsLayer: effectsLayer,
+    reelsLayer: reelsLayer,
+    winlinesLayer: winlinesLayer,
+    uiLayer: uiLayer,
+    topPanelLayer: topPanelLayer,
+    bottomPanelLayer: bottomPanelLayer,
+    modalLayer: modalLayer,
+  };
 
   return layers;
 }

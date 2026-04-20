@@ -132,30 +132,22 @@ export class TextButton {
     this.border.alpha = alpha;
     this.text.alpha = alpha;
 
-    this.bg
-  .roundRect(0, 0, width, height, radius)
-  .fill({ color: 0x262b31 });
+    this.bg.roundRect(0, 0, width, height, radius).fill({ color: 0x262b31 });
 
-   // очень легкий верхний внутренний свет
-this.gloss
-  .roundRect(
-    2,
-    2,
-    width - 4,
-    Math.max(2, height * 0.10),
-    Math.max(0, radius - 2)
-  )
-  .fill({ color: 0xffffff, alpha: 0.04 });
+    // очень легкий верхний внутренний свет
+    this.gloss
+      .roundRect(
+        2,
+        2,
+        width - 4,
+        Math.max(2, height * 0.1),
+        Math.max(0, radius - 2),
+      )
+      .fill({ color: 0xffffff, alpha: 0.04 });
 
     // рамка
     this.border
-      .roundRect(
-        0.5,
-        0.5,
-        width - 1,
-        height - 1,
-        Math.max(0, radius - 1)
-      )
+      .roundRect(0.5, 0.5, width - 1, height - 1, Math.max(0, radius - 1))
       .stroke({ color: 0xffffff, alpha: 0.14, width: 1 });
 
     this.text.x = width / 2;
@@ -165,7 +157,7 @@ this.gloss
       -width * anchorX,
       -height * anchorY,
       width,
-      height
+      height,
     );
     this.container.enabled = this.state !== "disabled";
   }

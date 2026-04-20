@@ -1,37 +1,37 @@
 import type { LayoutConfigs, LayoutMode } from "../../app/resize";
 
 export type GameLayerConfigs = {
-  mode: LayoutMode
+  mode: LayoutMode;
   width: number;
   height: number;
   paddingX: number;
-  itemSize: number;     
-  gap: number; 
+  itemSize: number;
+  gap: number;
   fontSize: number;
-  x:number;
-  y:number;
+  x: number;
+  y: number;
   reels: {
-    reelsW: number,
-    reelsH: number,    
-  },
+    reelsW: number;
+    reelsH: number;
+  };
   reel: {
-    count: number,
-    reelW: number,
-    reelH: number,
-    visibleRows: number,    
-    gap: number,
-  }, 
+    count: number;
+    reelW: number;
+    reelH: number;
+    visibleRows: number;
+    gap: number;
+  };
   symbol: {
-    count: number,
-    width: number,
-    height: number,
-    gap: number
-  }
-         
+    count: number;
+    width: number;
+    height: number;
+    gap: number;
+  };
 };
 
-
-export function computeGameLayerConfigs(layout: LayoutConfigs): GameLayerConfigs {
+export function computeGameLayerConfigs(
+  layout: LayoutConfigs,
+): GameLayerConfigs {
   const width = layout.designWidth;
 
   console.log(layout.screenWidth);
@@ -44,7 +44,7 @@ export function computeGameLayerConfigs(layout: LayoutConfigs): GameLayerConfigs
   const reelsGap = 18;
   const symbolGap = 2;
 
-  const reelsW = layout.designWidth - paddingX*2;
+  const reelsW = layout.designWidth - paddingX * 2;
 
   console.log(reelsW);
   const reelW = (reelsW - reelsGap * (reelCount - 1)) / reelCount;
@@ -87,4 +87,3 @@ export function computeGameLayerConfigs(layout: LayoutConfigs): GameLayerConfigs
     },
   };
 }
-

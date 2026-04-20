@@ -1,9 +1,15 @@
 import type { Layers } from "./layers";
 import { Graphics, Container } from "pixi.js";
-import {computeTopPanelConfigs} from '../ui/top_panel/top_panel_configs'
+import { computeTopPanelConfigs } from "../ui/top_panel/top_panel_configs";
 import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel_configs";
-import { updateBottomPanel, type BottomPanel } from "../ui/bottom_panel/create_bottom_panel";
-import { type TopPanel, updateTopPanel } from "../ui/top_panel/create_top_panel";
+import {
+  updateBottomPanel,
+  type BottomPanel,
+} from "../ui/bottom_panel/create_bottom_panel";
+import {
+  type TopPanel,
+  updateTopPanel,
+} from "../ui/top_panel/create_top_panel";
 import { computeGameLayerConfigs } from "../ui/game_area/game_area_configs";
 import { updateGameArea, type GameArea } from "../ui/game_area/game_layer";
 
@@ -32,16 +38,16 @@ export type LayoutConfigs = {
 };
 
 type Viewport = {
-    width: number,
-    height:number
-}
+  width: number;
+  height: number;
+};
 
 export const DESIGN_WIDTH = 1280;
 export const DESIGN_HEIGHT = 720;
 
 export function getLayoutMode(
   screenWidth: number,
-  screenHeight: number
+  screenHeight: number,
 ): LayoutMode {
   return screenWidth < screenHeight ? "mobile" : "desktop";
 }
@@ -53,10 +59,9 @@ function getViewportSize(): Viewport {
   };
 }
 
-export function computeLayout(
-): LayoutConfigs {
-    let viewport: Viewport = getViewportSize()
-    const mode = getLayoutMode(viewport.width, viewport.height);
+export function computeLayout(): LayoutConfigs {
+  let viewport: Viewport = getViewportSize();
+  const mode = getLayoutMode(viewport.width, viewport.height);
 
   // Масштабируем сцену по ширине.
   // Тогда верх и низ можно "приклеить",
@@ -129,12 +134,11 @@ export function updateLayout(layers: Layers): LayoutConfigs {
   return layout;
 }
 
-
 export function handleResize(
   layers: Layers,
   topPanel: TopPanel,
   bottomPanel: BottomPanel,
-  gameArea: GameArea
+  gameArea: GameArea,
 ) {
   const layout = updateLayout(layers);
 
@@ -155,7 +159,7 @@ export function drawDebugRect(
   width: number,
   height: number,
   color: number,
-  alpha = 0.2
+  alpha = 0.2,
 ) {
   const g = new Graphics();
 
@@ -189,7 +193,7 @@ function drawLayoutDebug(layers: Layers, layout: LayoutConfigs) {
     layout.designWidth,
     layout.designHeight,
     0xffffff,
-    0.05
+    0.05,
   );
 
   // Top panel
@@ -209,11 +213,11 @@ function drawLayoutDebug(layers: Layers, layout: LayoutConfigs) {
     layout.gameLayerY,
     layout.designWidth,
     layout.gameAreaHeight,
-    0x0000ff
+    0x0000ff,
   );
 
   // Bottom panel
- /*  drawDebugRect(
+  /*  drawDebugRect(
     debugLayer,
     0,
     layout.bottomPanelY,

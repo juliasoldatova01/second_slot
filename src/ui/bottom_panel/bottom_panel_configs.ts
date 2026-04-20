@@ -5,16 +5,17 @@ export type BottomPanelConfigs = {
   width: number;
   height: number;
   paddingX: number;
-  itemSize: number;     
-  gap: number; 
+  itemSize: number;
+  gap: number;
   scale: number;
-  buttonPaddingX: number;       
-  buttonPaddingY: number; 
-  buttonFontSize: number;      
+  buttonPaddingX: number;
+  buttonPaddingY: number;
+  buttonFontSize: number;
 };
 
-
-export function computeBottomPanelConfigs(layout: LayoutConfigs): BottomPanelConfigs {
+export function computeBottomPanelConfigs(
+  layout: LayoutConfigs,
+): BottomPanelConfigs {
   const width = layout.designWidth;
   const height = layout.bottomPanelHeight;
 
@@ -24,11 +25,10 @@ export function computeBottomPanelConfigs(layout: LayoutConfigs): BottomPanelCon
     height,
     paddingX: width * 0.1,
     itemSize: height,
-    gap: width * 0.02, 
+    gap: width * 0.02,
     scale: layout.scale,
-    buttonPaddingX: 20,      
+    buttonPaddingX: 20,
     buttonPaddingY: 10,
-    buttonFontSize: 36       
+    buttonFontSize: 36,
   };
 }
-
