@@ -1,7 +1,7 @@
 
 import { createLayers } from "./layers";
 import "../style.css";
-import { Application} from "pixi.js";
+import { Application, type Renderer, Ticker} from "pixi.js";
 import { handleResize, updateLayout } from "./resize.ts";
 import { createTopPanel} from "../ui/top_panel/create_top_panel.ts";
 import { computeTopPanelConfigs } from "../ui/top_panel/top_panel_configs.ts";
@@ -10,6 +10,8 @@ import { computeBottomPanelConfigs } from "../ui/bottom_panel/bottom_panel_confi
 import { computeGameLayerConfigs } from "../ui/game_area/game_area_configs.ts";
 import { createGameArea } from "../ui/game_area/game_layer.ts";
 import { loadSlotAssets } from "../assets/slot_assets.ts";
+import { initializeGame } from "../controllers/game_controller.ts";
+import { runApp } from "./ticker.ts";
 
 
 
@@ -44,8 +46,23 @@ async function start() {
   window.addEventListener("resize", () => {
     handleResize(layers, topPanel, bottomPanel,gameArea);
   });
+  
+  function update(dt: number) {
+          initializeGame(topPanel,gameArea,bottomPanel,dt);
+      }
+  
+      const tickerFn = (t: Ticker) => {
+          let dt = t.deltaMS / 1000;
+          dt = Math.min(dt, 0.05);
+          update(dt);
+      };
+  
+    app.ticker.add(tickerFn);
 }
 
 start();
+
+
+
 
 
