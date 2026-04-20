@@ -11,51 +11,41 @@ import { createGameArea } from "./ui/game_area/game_layer.ts";
 import { loadSlotAssets } from "./assets/slot_assets.ts";
 import { initializeGame } from "./controllers/game_controller.ts";
 import { runApp } from "./app/ticker.ts";
+import { createPixiApp } from "./utils/pixi.ts";
 
 await loadSlotAssets();
-async function start() {
-  const app = new Application();
-  (globalThis as any).__PIXI_APP__ = app;
 
-  await app.init({
-    resizeTo: window,
-    background: "#1a1a1a",
-  });
+const app = await createPixiApp();
 
-  document.body.appendChild(app.canvas);
+const layers = createLayers();
+app.stage.addChild(layers.root);
 
-  const layers = createLayers();
-  app.stage.addChild(layers.root);
+const layout = updateLayout(layers);
 
-  const layout = updateLayout(layers);
+const topPanelConfigs = computeTopPanelConfigs(layout);
+const topPanel = createTopPanel(layers, topPanelConfigs);
 
-  const topPanelConfigs = computeTopPanelConfigs(layout);
-  const topPanel = createTopPanel(layers, topPanelConfigs);
+const bottomPanelConfigs = computeBottomPanelConfigs(layout);
+const bottomPanel = createBottomPanel(layers, bottomPanelConfigs);
 
-  const bottomPanelConfigs = computeBottomPanelConfigs(layout);
-  const bottomPanel = createBottomPanel(layers, bottomPanelConfigs);
+const gameLayerConfigs = computeGameLayerConfigs(layout);
 
-  const gameLayerConfigs = computeGameLayerConfigs(layout);
+const gameArea = createGameArea(layers, gameLayerConfigs);
 
-  const gameArea = createGameArea(layers, gameLayerConfigs);
+window.addEventListener("resize", () => {
+  handleResize(layers, topPanel, bottomPanel, gameArea);
+});
 
-  window.addEventListener("resize", () => {
-    handleResize(layers, topPanel, bottomPanel, gameArea);
-  });
+// function update(dt: number) {
+//   initializeGame(topPanel, gameArea, bottomPanel, dt);
+// }
 
-  // function update(dt: number) {
-  //   initializeGame(topPanel, gameArea, bottomPanel, dt);
-  // }
+// const tickerFn = (t: Ticker) => {
+//   let dt = t.deltaMS / 1000;
+//   dt = Math.min(dt, 0.05);
+//   update(dt);
+// };
 
-  // const tickerFn = (t: Ticker) => {
-  //   let dt = t.deltaMS / 1000;
-  //   dt = Math.min(dt, 0.05);
-  //   update(dt);
-  // };
+// app.ticker.add(tickerFn);
 
-  // app.ticker.add(tickerFn);
-
-  initializeGame(topPanel);
-}
-
-start();
+initializeGame(topPanel);
